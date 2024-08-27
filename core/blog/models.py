@@ -1,4 +1,8 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+# getting user model object
+User = get_user_model()
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -6,7 +10,7 @@ class Post(models.Model):
     title = models.CharField(max_length=25)
     content = models.TextField()
     status = models.BooleanField()
-    category = models.ForeignKey('Catgory', on_delete=models.SET_NULL, null=False)
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
@@ -15,7 +19,7 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-class Ctegory(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=25)
 
     def __str__(self):
