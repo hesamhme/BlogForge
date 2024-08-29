@@ -10,7 +10,7 @@
     <duv>
         <h2>
             hi
-            {{list.title}}
+            <a href="{% url 'blog:post_detail' pk=list.id %}">{{list.title}}</a>
         </h2>
         <p>
             {{list.content}}
