@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 from .forms import PostForm
 
@@ -23,4 +23,9 @@ class PostCreateViews(CreateView):
 class PostEditView(UpdateView):
     model = Post
     form_class = PostForm
+    success_url = '/blog/post/'
+
+
+class PostDeleteView(DeleteView):
+    model = Post
     success_url = '/blog/post/'

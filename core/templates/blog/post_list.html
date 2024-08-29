@@ -14,13 +14,16 @@
             <a href="{% url 'blog:edit' pk=list.id %}">
                 <h5>EDIT</h5>
             </a>
+            <a href="{% url 'blog:delete' pk=list.id %}">
+                <h5>delete</h5>
+            </a>
         </h2>
         <p>
             {{list.content}}
         </p>
         <hr>
         <hr>
-        
+
     </duv>
     {% endfor %}
 </body>
