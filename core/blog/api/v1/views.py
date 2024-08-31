@@ -9,14 +9,16 @@ from blog.models import Post
 # first api base function
 @api_view()
 def post_list(request):
-    return Response("ok")
+    posts = Post.objects.filter(status=True)
+    posts_serializer = PostSerializer(posts, many=True)
+    return Response(posts_serializer.data)
 
 @api_view()
 def post_detail(request, id):
 
-    post = get_object_or_404(Post, pk=id)
-    serializer = PostSerializer(post)
-    return Response(serializer.data)
+    post = get_object_or_404(Post, pk=id, status=True)
+    post_serializer = PostSerializer(post)
+    return Response(post_serializer.data)
 
 
 
