@@ -20,13 +20,17 @@ def post_list(request):
         return Response(posts_serializer.data)
 
 
-@api_view()
+@api_view(['GET', 'PUT'])
 def post_detail(request, id):
-
     post = get_object_or_404(Post, pk=id, status=True)
-    post_serializer = PostSerializer(post)
-    return Response(post_serializer.data)
-
+    if request.method == "GET":
+        post_serializer = PostSerializer(post)
+        return Response(post_serializer.data)
+    elif request.method == "PUT":
+        post_serializer = PostSerializer(post, data=request.data)
+        post_serializer.is_valid(raise_exception=True)
+        post_serializer.save()
+        return Response(post_serializer.data)
 
 
 
