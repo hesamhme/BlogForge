@@ -7,11 +7,18 @@ from .serializers import PostSerializer
 from blog.models import Post
 
 # first api base function
-@api_view()
+@api_view(['GET', 'POST'])
 def post_list(request):
-    posts = Post.objects.filter(status=True)
-    posts_serializer = PostSerializer(posts, many=True)
-    return Response(posts_serializer.data)
+    if request.method == "GET":
+        posts = Post.objects.filter(status=True)
+        posts_serializer = PostSerializer(posts, many=True)
+        return Response(posts_serializer.data)
+    elif request.method == "POST":
+        posts_serializer = PostSerializer(data = request.data)
+        posts_serializer.is_valid(raise_exception=True)
+        posts_serializer.save()
+        return Response(posts_serializer.data)
+
 
 @api_view()
 def post_detail(request, id):
