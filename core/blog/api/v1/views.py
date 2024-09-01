@@ -1,10 +1,17 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import status
+from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+
 
 from .serializers import PostSerializer
 from blog.models import Post
+
+'''
+the function base view is old structure, i used here to just show my ability 
+knowing how to using them
 
 # first api base function
 @api_view(['GET', 'POST'])
@@ -18,6 +25,8 @@ def post_list(request):
         posts_serializer.is_valid(raise_exception=True)
         posts_serializer.save()
         return Response(posts_serializer.data)
+
+'''
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -37,6 +46,28 @@ def post_detail(request, id):
 
 
 
+class PostList(APIView):
+
+    # permissions classes
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    #serializer class for easy data input
+    serializer_class = PostSerializer
+
+    # getting a list of post and create new posts
+
+    def get(self, request):
+        # retriveing a list of posts
+        posts = Post.objects.filter(status=True)
+        posts_serializer = PostSerializer(posts, many=True)
+        return Response(posts_serializer.data)
+    
+    def post(self, request):
+        # creating a post with provided data
+        posts_serializer = PostSerializer(data = request.data)
+        posts_serializer.is_valid(raise_exception=True)
+        posts_serializer.save()
+        return Response(posts_serializer.data)
 
 
 
