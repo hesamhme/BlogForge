@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import status, mixins
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, ListCreateAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.shortcuts import get_object_or_404
 
 
@@ -22,6 +22,21 @@ class PostList(ListCreateAPIView):
     queryset = Post.objects.filter(status=True)
 
 
+class PostDetail(RetrieveUpdateDestroyAPIView):
+    # getting detail of the post edit and delete it
+    
+    # permissions classes
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    #serializer class for easy data input
+    serializer_class = PostSerializer
+
+    # query set
+    queryset = Post.objects.filter(status=True)
+
+
+'''
+USING MIXINS 
 class PostDetail(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     # getting detail of the post edit and delete it
     
@@ -47,7 +62,7 @@ class PostDetail(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMi
     
     def delete(self, request,*args, **kwargs):
         # delete data
-        return self.delete(request, *args, **kwargs)
+        return self.delete(request, *args, **kwargs)'''
     
 
 
