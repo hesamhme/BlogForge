@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import status, mixins
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from django.shortcuts import get_object_or_404
 
 
@@ -11,6 +11,37 @@ from .serializers import PostSerializer
 from blog.models import Post
 
 
+class PostList(ListCreateAPIView):
+    # permissions classes
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    #serializer class for easy data input
+    serializer_class = PostSerializer
+
+    # query set
+    queryset = Post.objects.filter(status=True)
+
+class PostDetail(GenericAPIView, mixins.RetrieveModelMixin):
+    # getting detail of the post edit and delete it
+    
+    # permissions classes
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    #serializer class for easy data input
+    serializer_class = PostSerializer
+
+    # query set
+    queryset = Post.objects.filter(status=True)
+
+    # looking for
+    # lookup_field = 'id'
+
+    def get(self, request,*args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+
+'''
+USING MIXINS POST LIST VIEW
 class PostList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -28,10 +59,11 @@ class PostList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+'''
 
-
-
-'''class PostList(APIView):
+'''
+USING APIVIEW POST LIST VIEW
+class PostList(APIView):
 
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -55,6 +87,8 @@ class PostList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
         return Response(posts_serializer.data)'''
 
 
+'''
+USING APIVIEW POST DETAIL
 class PostDetail(APIView):
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -79,9 +113,10 @@ class PostDetail(APIView):
         post.delete()
         return Response({"detail": "item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
 
-
+'''
 
 '''
+USING FBV
 the function base view is old structure, i used here to just show my ability 
 knowing how to using them
 
