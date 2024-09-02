@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework import status
+from rest_framework import status, mixins
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from django.shortcuts import get_object_or_404
 
 
@@ -10,7 +11,27 @@ from .serializers import PostSerializer
 from blog.models import Post
 
 
-class PostList(APIView):
+class PostList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    # permissions classes
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    #serializer class for easy data input
+    serializer_class = PostSerializer
+
+    # query set
+    queryset = Post.objects.filter(status=True)
+
+    def get(self, request, *args, **kwargs):
+        
+        # retriveing a list of posts
+        return self.list(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+
+'''class PostList(APIView):
 
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -31,7 +52,7 @@ class PostList(APIView):
         posts_serializer = PostSerializer(data = request.data)
         posts_serializer.is_valid(raise_exception=True)
         posts_serializer.save()
-        return Response(posts_serializer.data)
+        return Response(posts_serializer.data)'''
 
 
 class PostDetail(APIView):
