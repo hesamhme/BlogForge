@@ -10,6 +10,20 @@ from django.shortcuts import get_object_or_404
 from .serializers import PostSerializer
 from blog.models import Post
 
+
+# using model view sets
+class PostViewSet(viewsets.ModelViewSet):
+    # permissions classes
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    #serializer class for easy data input
+    serializer_class = PostSerializer
+
+    # query set
+    queryset = Post.objects.filter(status=True)
+
+
+'''
 # using view sets
 class PostViewSet(viewsets.ViewSet):
     # permissions classes
@@ -38,6 +52,7 @@ class PostViewSet(viewsets.ViewSet):
 
     def destroy(self, request, pk=None):
         pass
+    '''
 
 
 '''
