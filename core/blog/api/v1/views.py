@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework import status, mixins
+from rest_framework import status, mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.shortcuts import get_object_or_404
@@ -10,7 +10,37 @@ from django.shortcuts import get_object_or_404
 from .serializers import PostSerializer
 from blog.models import Post
 
+# using view sets
+class PostViewSet(viewsets.ViewSet):
+    # permissions classes
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
+    #serializer class for easy data input
+    serializer_class = PostSerializer
 
+    # query set
+    queryset = Post.objects.filter(status=True)
+
+    def list(self, request):
+        serializer = self.serializer_class(self.queryset, many=True)
+        return Response(serializer.data)
+    
+    def retrieve(self, request, pk=None):
+        post_object = get_object_or_404(self.queryset, pk=pk)
+        serializer = self.serializer_class(post_object)
+        return Response(serializer.data)
+    
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        pass
+
+
+'''
 class PostList(ListCreateAPIView):
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -32,12 +62,12 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
 
     # query set
-    queryset = Post.objects.filter(status=True)
+    queryset = Post.objects.filter(status=True)'''
 
 
 '''
 USING MIXINS 
-class PostDetail(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+class PostDetailGenericView(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     # getting detail of the post edit and delete it
     
     # permissions classes
@@ -68,7 +98,7 @@ class PostDetail(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMi
 
 '''
 USING MIXINS POST LIST VIEW
-class PostList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+class PostListGenericView(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
     
@@ -89,7 +119,7 @@ class PostList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
 
 '''
 USING APIVIEW POST LIST VIEW
-class PostList(APIView):
+class PostListApiView(APIView):
 
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -115,7 +145,7 @@ class PostList(APIView):
 
 '''
 USING APIVIEW POST DETAIL
-class PostDetail(APIView):
+class PostDetailApiView(APIView):
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
     
@@ -148,7 +178,7 @@ knowing how to using them
 
 # first api base function
 @api_view(['GET', 'POST'])
-def post_list(request):
+def post_list_fbv(request):
     if request.method == "GET":
         posts = Post.objects.filter(status=True)
         posts_serializer = PostSerializer(posts, many=True)
@@ -161,7 +191,7 @@ def post_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def post_detail(request, id):
+def post_detail_fbv(request, id):
     post = get_object_or_404(Post, pk=id, status=True)
     if request.method == "GET":
         post_serializer = PostSerializer(post)
