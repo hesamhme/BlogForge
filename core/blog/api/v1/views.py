@@ -7,12 +7,12 @@ from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveU
 from django.shortcuts import get_object_or_404
 
 
-from .serializers import PostSerializer
-from blog.models import Post
+from .serializers import PostSerializer, CategorySerializer
+from blog.models import Post, Category
 
 
 # using model view sets
-class PostViewSet(viewsets.ModelViewSet):
+class PostModelViewSet(viewsets.ModelViewSet):
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
     
@@ -21,6 +21,14 @@ class PostViewSet(viewsets.ModelViewSet):
 
     # query set
     queryset = Post.objects.filter(status=True)
+
+
+class CategoryModelViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+
 
 
 '''
