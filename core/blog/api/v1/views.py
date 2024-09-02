@@ -21,7 +21,8 @@ class PostList(ListCreateAPIView):
     # query set
     queryset = Post.objects.filter(status=True)
 
-class PostDetail(GenericAPIView, mixins.RetrieveModelMixin):
+
+class PostDetail(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     # getting detail of the post edit and delete it
     
     # permissions classes
@@ -37,7 +38,17 @@ class PostDetail(GenericAPIView, mixins.RetrieveModelMixin):
     # lookup_field = 'id'
 
     def get(self, request,*args, **kwargs):
+        # retrive data
         return self.retrieve(request, *args, **kwargs)
+    
+    def put(self, request,*args, **kwargs):
+        # update data
+        return self.update(request, *args, **kwargs)
+    
+    def delete(self, request,*args, **kwargs):
+        # delete data
+        return self.delete(request, *args, **kwargs)
+    
 
 
 '''
