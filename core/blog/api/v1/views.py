@@ -8,13 +8,14 @@ from django.shortcuts import get_object_or_404
 
 
 from .serializers import PostSerializer, CategorySerializer
+from .permissions import IsOwnerOrReadOnly
 from blog.models import Post, Category
 
 
 # using model view sets
 class PostModelViewSet(viewsets.ModelViewSet):
     # permissions classes
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     
     #serializer class for easy data input
     serializer_class = PostSerializer
