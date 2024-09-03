@@ -26,8 +26,9 @@ class PostModelViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.filter(status=True)
 
     # filters
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['author', 'category']
+    search_fields = ['title', 'content']
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
