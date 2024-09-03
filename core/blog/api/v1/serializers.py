@@ -6,10 +6,11 @@ from ...models import Post, Category
 
 
 class PostSerializer(serializers.ModelSerializer):
+    snippet = serializers.ReadOnlyField(source='get_snippet')
     class Meta:
         model = Post
         # fields = '__all__'
-        fields = ['id', 'author','title','content', 'status', 'category', 'created_date', 'publish_date']
+        fields = ['id', 'author','title','content', 'snippet', 'status', 'category', 'created_date', 'publish_date']
 
 
 
