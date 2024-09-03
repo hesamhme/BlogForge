@@ -4,6 +4,8 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework import status, mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from django.shortcuts import get_object_or_404
 
 
@@ -23,14 +25,16 @@ class PostModelViewSet(viewsets.ModelViewSet):
     # query set
     queryset = Post.objects.filter(status=True)
 
+    # filters
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['author', 'category']
+
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
-
-
-
+ 
 
 '''
 # using view sets

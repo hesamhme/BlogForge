@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "blog",
     # DRF
     "rest_framework",
+    'django_filters',
 
 
 ]
