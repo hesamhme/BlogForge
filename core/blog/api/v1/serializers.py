@@ -10,7 +10,19 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         # fields = '__all__'
-        fields = ['id', 'author','title','content', 'snippet', 'status', 'category', 'created_date', 'publish_date']
+        fields = ['id', 'author','title','content', 'image', 'snippet', 'status', 'category', 'created_date', 'publish_date']
+
+    # to seprate and rganize serializer for list and detail view
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        rep = super().to_representation(instance)
+        if request.parser_context.get('kwargs').get('pk'):
+            rep.pop('snippet', None)
+        else:
+            rep.pop('content', None)
+
+        rep['category'] = CategorySerializer(instance.category).data  
+        return rep
 
 
 
