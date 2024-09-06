@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # DRF
     "rest_framework",
     'django_filters',
+    'drf_yasg',
 
 
 ]
