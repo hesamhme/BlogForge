@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
+from .paginations import LargeResultsSetPagination
 from blog.models import Post, Category
 
 
@@ -29,7 +30,8 @@ class PostModelViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['author', 'category']
     search_fields = ['title', 'content']
-    ordering_fields = ['publish_date'] 
+    ordering_fields = ['publish_date']
+    pagination_class = LargeResultsSetPagination
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
