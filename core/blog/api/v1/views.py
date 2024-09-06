@@ -5,7 +5,7 @@ from rest_framework import status, mixins, viewsets
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from django.shortcuts import get_object_or_404
 
 
@@ -26,9 +26,10 @@ class PostModelViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.filter(status=True)
 
     # filters
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['author', 'category']
     search_fields = ['title', 'content']
+    ordering_fields = ['publish_date'] 
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
