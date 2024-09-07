@@ -1,6 +1,13 @@
 from django.urls import path, include
+from . import views
 
+app_name = 'api-v1'
 
 urlpatterns = [
-    # path('api/v1/', include('blog.api.v1.urls')),
+    # registration
+    path('registrations/', views.RegistrationsApiView.as_view(), name='registrations')
+    # change password
+    # reset password
+    # login token
+    # login jwt
 ] 
