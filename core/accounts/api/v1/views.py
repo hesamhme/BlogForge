@@ -11,7 +11,8 @@ class RegistrationsApiView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.save()
             data = {
-                'email':serializer.validated_data['email']
+                'message': 'user created successfully',
+                'detail': f" you registered with email: {serializer.validated_data['email']} ",
             }
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
