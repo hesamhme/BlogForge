@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 
 from .serializers import RegistrationsSerializerClass, CustomAuthTokenSerializer
 
+
 class RegistrationsApiView(generics.GenericAPIView):
     serializer_class = RegistrationsSerializerClass
 
