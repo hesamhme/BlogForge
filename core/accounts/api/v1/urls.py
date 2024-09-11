@@ -11,12 +11,16 @@ app_name = 'api-v1'
 urlpatterns = [
     # registration
     path('registrations/', views.RegistrationsApiView.as_view(), name='registrations'),
+    
 
     # activation
-    path('confirm/'),
+    # path('activation/confirm', ),
+
+    # activationresend
+    # path('activation/resend', ),
     
     # resend activation
-    path('resend-activations/'),
+    # path('resend-activations/'),
     # change password
     path('change-password/', views.ChangePasswordViews.as_view(), name='change-password'),
     
