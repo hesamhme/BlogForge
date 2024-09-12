@@ -7,6 +7,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 
+from mail_templated import EmailMessage
+
 from .serializers import (
     RegistrationsSerializerClass, 
     CustomAuthTokenSerializer, 
@@ -14,6 +16,7 @@ from .serializers import (
     ProfileSerializer
 ) 
 from ...models import User, Profile
+from ..utils import EmailThreading
 
 
 class RegistrationsApiView(generics.GenericAPIView):
@@ -89,4 +92,8 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
         return obj
     
     
- 
+class TestEmailSend(generics.GenericAPIView):
+    def get(self, request, *args, **kwargs):
+        email_obj = EmailMessage('email/hello.tpl', {'name': 'hesam'}, 'admin@admin.com', to=['user@user.com'])
+        EmailThreading(email_obj).start
+        return Response('sent!!!!')
