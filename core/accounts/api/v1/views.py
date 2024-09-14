@@ -103,19 +103,26 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
         queryset = self.get_queryset()
         obj = get_object_or_404(queryset, user=self.request.user)
         return obj
-    
-    
-# class TestEmailSend(generics.GenericAPIView):
-    
-#     def get(self, request, *args, **kwargs):
-#         self.email = 'user@user.com'
-#         user_obj = get_object_or_404(User, email = self.email)
-#         token = self.get_tokens_for_user(user_obj)
-#         email_obj = EmailMessage('email/hello.tpl', {'token': token}, 'admin@admin.com', to=[self.email])
-#         EmailThreading(email_obj).start()
-#         return Response('sent!!!!')
-    
-#     def get_tokens_for_user(self, user):
-#         refresh = RefreshToken.for_user(user)
 
-#         return str(refresh.access_token)
+
+class ActivationApiView(APIView):
+    def post(self, request, *args, **kwargs):
+        return 'ok'
+
+
+
+
+class TestEmailSend(generics.GenericAPIView):
+    
+    def get(self, request, *args, **kwargs):
+        self.email = 'user@user.com'
+        user_obj = get_object_or_404(User, email = self.email)
+        token = self.get_tokens_for_user(user_obj)
+        email_obj = EmailMessage('email/hello.tpl', {'token': token}, 'admin@admin.com', to=[self.email])
+        EmailThreading(email_obj).start()
+        return Response('sent!!!!')
+    
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+
+        return str(refresh.access_token)
