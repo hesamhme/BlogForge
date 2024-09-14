@@ -17,7 +17,8 @@ from .serializers import (
     RegistrationsSerializerClass, 
     CustomAuthTokenSerializer, 
     ChangePasswordSerializer, 
-    ProfileSerializer
+    ProfileSerializer,
+    ActivationResendApiSerializer,
 ) 
 from ...models import User, Profile
 from ..utils import EmailThreading
@@ -129,17 +130,18 @@ class ActivationApiView(APIView):
 
 
 
-class ActivationResendApiView(APIView):
+class ActivationResendApiView(generics.GenericAPIView):
+    serializer_class = ActivationResendApiSerializer
+
     def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
-        if email:
-            user_obj = get_object_or_404(User, email = email)
-            token = self.get_tokens_for_user(user_obj)
-            email_obj = EmailMessage('email/hello.tpl', {'token': token}, 'admin@admin.com', to=[email])
-            EmailThreading(email_obj).start()
-            return Response({'detail': 'user activation resend successfully'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'detail': 'invalid request'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = ActivationResendApiSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_obj = serializer.validated_data['user']
+        token = self.get_tokens_for_user(user_obj)
+        email_obj = EmailMessage('email/activation_email.tpl', {'token': token}, 'admin@admin.com', to=[user_obj.email])
+        EmailThreading(email_obj).start()
+        return Response({'detail': 'user activation resend successfully'}, status=status.HTTP_200_OK)
+
         
     def get_tokens_for_user(self, user):
         refresh = RefreshToken.for_user(user)
