@@ -7,6 +7,9 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
+import jwt
+from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
+from django.conf import settings
 
 from mail_templated import EmailMessage
 
@@ -106,8 +109,42 @@ class ProfileApiView(generics.RetrieveUpdateAPIView):
 
 
 class ActivationApiView(APIView):
+    def get(self, request, token, *args, **kwargs):
+        # decode token
+        try:
+            token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            user_id = token.get('user_id')
+        except ExpiredSignatureError:
+            return Response({'detail': 'token expired'}, status=status.HTTP_400_BAD_REQUEST)
+        except InvalidSignatureError:
+            return Response({'detail': 'token is not valid'}, status=status.HTTP_400_BAD_REQUEST)
+        # create user obj and active account
+        user_obj = User.objects.get(pk=user_id)
+        if user_obj.is_verifeid:
+            return Response({'details': 'your account is already verified'})
+        user_obj.is_verifeid= True
+        user_obj.save()
+
+        return Response({'details': 'your account has been successful verified'})
+
+
+
+class ActivationResendApiView(APIView):
     def post(self, request, *args, **kwargs):
-        return 'ok'
+        email = request.data.get('email')
+        if email:
+            user_obj = get_object_or_404(User, email = email)
+            token = self.get_tokens_for_user(user_obj)
+            email_obj = EmailMessage('email/hello.tpl', {'token': token}, 'admin@admin.com', to=[email])
+            EmailThreading(email_obj).start()
+            return Response({'detail': 'user activation resend successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'detail': 'invalid request'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
 
 
 
@@ -124,5 +161,4 @@ class TestEmailSend(generics.GenericAPIView):
     
     def get_tokens_for_user(self, user):
         refresh = RefreshToken.for_user(user)
-
         return str(refresh.access_token)
