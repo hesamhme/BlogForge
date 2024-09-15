@@ -1,9 +1,16 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework import status, mixins, viewsets
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (
+    GenericAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.shortcuts import get_object_or_404
@@ -19,8 +26,8 @@ from blog.models import Post, Category
 class PostModelViewSet(viewsets.ModelViewSet):
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    
-    #serializer class for easy data input
+
+    # serializer class for easy data input
     serializer_class = PostSerializer
 
     # query set
@@ -28,9 +35,9 @@ class PostModelViewSet(viewsets.ModelViewSet):
 
     # filters
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['author', 'category']
-    search_fields = ['title', 'content']
-    ordering_fields = ['publish_date']
+    filterset_fields = ["author", "category"]
+    search_fields = ["title", "content"]
+    ordering_fields = ["publish_date"]
     pagination_class = LargeResultsSetPagination
 
 
@@ -38,9 +45,9 @@ class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
- 
 
-'''
+
+"""
 # using view sets
 class PostViewSet(viewsets.ViewSet):
     # permissions classes
@@ -69,10 +76,10 @@ class PostViewSet(viewsets.ViewSet):
 
     def destroy(self, request, pk=None):
         pass
-    '''
+    """
 
 
-'''
+"""
 class PostList(ListCreateAPIView):
     # permissions classes
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -94,10 +101,10 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
 
     # query set
-    queryset = Post.objects.filter(status=True)'''
+    queryset = Post.objects.filter(status=True)"""
 
 
-'''
+"""
 USING MIXINS 
 class PostDetailGenericView(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     # getting detail of the post edit and delete it
@@ -124,11 +131,10 @@ class PostDetailGenericView(GenericAPIView, mixins.RetrieveModelMixin, mixins.Up
     
     def delete(self, request,*args, **kwargs):
         # delete data
-        return self.delete(request, *args, **kwargs)'''
-    
+        return self.delete(request, *args, **kwargs)"""
 
 
-'''
+"""
 USING MIXINS POST LIST VIEW
 class PostListGenericView(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     # permissions classes
@@ -147,9 +153,9 @@ class PostListGenericView(GenericAPIView, mixins.ListModelMixin, mixins.CreateMo
     
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-'''
+"""
 
-'''
+"""
 USING APIVIEW POST LIST VIEW
 class PostListApiView(APIView):
 
@@ -172,10 +178,10 @@ class PostListApiView(APIView):
         posts_serializer = PostSerializer(data = request.data)
         posts_serializer.is_valid(raise_exception=True)
         posts_serializer.save()
-        return Response(posts_serializer.data)'''
+        return Response(posts_serializer.data)"""
 
 
-'''
+"""
 USING APIVIEW POST DETAIL
 class PostDetailApiView(APIView):
     # permissions classes
@@ -201,9 +207,9 @@ class PostDetailApiView(APIView):
         post.delete()
         return Response({"detail": "item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
 
-'''
+"""
 
-'''
+"""
 USING FBV
 the function base view is old structure, i used here to just show my ability 
 knowing how to using them
@@ -238,4 +244,4 @@ def post_detail_fbv(request, id):
         return Response({"detail": "item removed successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
-'''
+"""

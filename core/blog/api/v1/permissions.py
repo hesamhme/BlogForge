@@ -14,4 +14,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Instance must have an attribute named `author`.
-        return obj.author.user == request.user 
+        return obj.author.user == request.user

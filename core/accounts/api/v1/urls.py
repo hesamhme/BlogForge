@@ -6,35 +6,51 @@ from rest_framework_simplejwt.views import (
 )
 from . import views
 
-app_name = 'api-v1'
+app_name = "api-v1"
 
 urlpatterns = [
     # registration
-    path('registrations/', views.RegistrationsApiView.as_view(), name='registrations'),
-    
-    path('email/test', views.TestEmailSend.as_view(), name='test-mail'),
+    path(
+        "registrations/",
+        views.RegistrationsApiView.as_view(),
+        name="registrations",
+    ),
+    path("email/test", views.TestEmailSend.as_view(), name="test-mail"),
     # activation
-    path('activation/confirm/<str:token>', views.ActivationApiView.as_view(), name = 'activation' ),
-
+    path(
+        "activation/confirm/<str:token>",
+        views.ActivationApiView.as_view(),
+        name="activation",
+    ),
     # activation resend
-    path('activation/resend/', views.ActivationResendApiView.as_view(), name = 'activation-resend'),
-    
+    path(
+        "activation/resend/",
+        views.ActivationResendApiView.as_view(),
+        name="activation-resend",
+    ),
     # change password
-    path('change-password/', views.ChangePasswordViews.as_view(), name='change-password'),
-    
+    path(
+        "change-password/",
+        views.ChangePasswordViews.as_view(),
+        name="change-password",
+    ),
     # reset password
-    
     # login token
-    path('token/login/', views.CustomObtainAuthToken.as_view() , name='token-login'),
-    
+    path(
+        "token/login/",
+        views.CustomObtainAuthToken.as_view(),
+        name="token-login",
+    ),
     # logout token
-    path('token/logout/', views.CustomDiscardAuthToken.as_view() , name='token-logout'),
-    
+    path(
+        "token/logout/",
+        views.CustomDiscardAuthToken.as_view(),
+        name="token-logout",
+    ),
     # login jwt
-    path('jwt/create/', TokenObtainPairView.as_view(), name='jwt-create'),
-    path('jwt/refresh/', TokenRefreshView.as_view(), name='jwt_refresh'),
-    path('jwt/verify/', TokenVerifyView.as_view(), name='jwt_verify'),
-
+    path("jwt/create/", TokenObtainPairView.as_view(), name="jwt-create"),
+    path("jwt/refresh/", TokenRefreshView.as_view(), name="jwt_refresh"),
+    path("jwt/verify/", TokenVerifyView.as_view(), name="jwt_verify"),
     # profile
-    path('profile/', views.ProfileApiView.as_view(), name='jwt_verify'),
-] 
+    path("profile/", views.ProfileApiView.as_view(), name="jwt_verify"),
+]
